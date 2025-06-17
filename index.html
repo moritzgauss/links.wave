@@ -1,0 +1,214 @@
+<!--
+ __  __       ____  
+|  \/  |     / ___| 
+| \  / |    | | __  
+| |\/| |    | |(  | 
+| |  | |  _ | |_) |  _ 
+(_)  (_) (_) \____| (_)
+
+-->  
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>piquedeux-linkinbio</title>
+    <link href="https://github.com/refuse2sink/linktree/raw/refs/heads/main/NeulisAlt-Medium.woff" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@40,300&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'NeulisAlt';
+            src: url('https://github.com/refuse2sink/linktree/raw/refs/heads/main/NeulisAlt-Medium.woff') format('woff');
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            max-width: 100%;
+            background-color: #fefefe;
+            font-family: 'DM Sans', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+        .title {
+            font-family: 'NeulisAlt', sans-serif;
+            font-size: 36px;
+            line-height: 1;
+            margin-top: 100px;
+            margin-bottom: 4px;
+            text-align: center;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+        .subtitle {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            max-width: 240px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .button-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin-top: 20px;
+            z-index: 1;
+            perspective: 1000px;
+        }
+        .orbit {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-style: preserve-3d;
+            animation: rotate 10s linear infinite;
+        }
+        .button {
+            position: absolute;
+            display: inline-block;
+            padding: 20px 30px;
+            border: 2px solid black;
+            background-color: white;
+            color: black;
+            font-family: 'Pinyon Script', cursive;
+            font-size: 22px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: rgb(255, 0, 0);
+            color: white;
+        }
+        .button:nth-child(1) {
+            transform: rotateY(0deg) translateZ(150px);
+        }
+        .button:nth-child(2) {
+            transform: rotateY(90deg) translateZ(150px);
+        }
+        .button:nth-child(3) {
+            transform: rotateY(180deg) translateZ(150px);
+        }
+        .button:nth-child(4) {
+            transform: rotateY(270deg) translateZ(150px);
+        }
+        @keyframes rotate {
+            from {
+                transform: rotateY(0deg);
+            }
+            to {
+                transform: rotateY(360deg);
+            }
+        }
+
+        /* Rain animation styles */
+        .rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+            background: transparent;
+        }
+        .rain div {
+            position: absolute;
+            color: rgba(0, 0, 0, 0.7);
+            font-family: 'Pinyon Script', cursive;
+            font-size: 14px;
+            white-space: nowrap;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Overlay styles */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://raw.githubusercontent.com/refuse2sink/linktree/main/IMG_5155.png') center center no-repeat;
+            background-size: cover;
+            z-index: 2;
+        }
+        .overlay.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title" onclick="showOverlay()">MORITZ GAUSS</h1>
+<p class="subtitle">digital.web and industrial design, creative direction. contact me <a href="mailto:moritzgg99@gmail.com" style="text-decoration: none; color: inherit;">moritzgg99(at)gmail.com</a></p>
+    <div class="button-container">
+        <div class="orbit">
+            <a href="https://moritzgauss.xyz" class="button">Portfolio</a>
+            <a href="https://moritzgauss.webflow.io" class="button">Web Portfolio</a>
+            <a href="https://r2shine.de" class="button">Rise 2 Shine</a>
+            <a href="https://www.fiverr.com/s/dD5llj6" class="button">fiverr</a>
+        </div>
+    </div>
+    <div class="overlay" id="overlay" onclick="hideOverlay()"></div>
+    <div class="rain"></div>
+
+    <script>
+        const rainContainer = document.querySelector('.rain');
+        const snippets = [
+            '<!DOCTYPE html>', '<html lang="de">', '<head>', '<meta charset="UTF-8">', '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+            '<title>links</title>', '<link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">',
+            '<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wdth,wght@75,300&display=swap" rel="stylesheet">',
+            '<style>', 'body {', 'margin: 0;', 'padding: 20px;', 'box-sizing: border-box;', 'display: flex;', 'flex-direction: column;',
+            'justify-content: center;', 'align-items: center;', 'min-height: 100vh;', 'max-width: 100%;', 'background-color: #f9f9f9;',
+            'font-family: \'Pinyon Script\', cursive;', 'cursor: url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black"><circle cx="12" cy="12" r="10"/></svg>\') 12 12, auto;',
+            '}', '.button-container {', 'text-align: center;', 'margin-bottom: 20px;', '}', '.button {', 'display: inline-block;',
+            'padding: 20px 40px;', 'border: 2px solid black;', 'background-color: white;', 'color: black;', 'font-size: 24px;', 'text-decoration: none;',
+            'transition: background-color 0.3s ease;', 'cursor: pointer;', '}', '.button:hover {', 'background-color: rgb(255, 0, 0);', 'color: white;',
+            '}', '.subtitle {', 'font-family: \'Open Sans\', sans-serif;', 'font-size: 14px;', 'margin-bottom: 20px;', '}', '</style>', '</head>', '<body>',
+            '<div class="button-container">', '<h1 style="font-size: 48px; margin-bottom: 20px;">@piquedeux</h1>', '<p class="subtitle">linktree, check out these links</p>',
+            '<a href="https://www.moritzgauss.xyz" class="button">Portfolio</a>', '<a href="https://www.r2shine.de" class="button">Rise 2 Shine</a>', '</div>', '</body>', '</html>'
+        ];
+
+        const createRainDrop = () => {
+            const rainDrop = document.createElement('div');
+            rainDrop.textContent = snippets[Math.floor(Math.random() * snippets.length)];
+            rainDrop.style.left = `${Math.random() * window.innerWidth}px`; 
+            rainDrop.style.animationDuration = `${Math.random() * 5 + 5}s`;
+            rainDrop.style.fontSize = `${Math.random() * 8 + 10}px`;
+            rainContainer.appendChild(rainDrop);
+
+            rainDrop.addEventListener('animationend', () => {
+                rainDrop.remove();
+            });
+        };
+
+        setInterval(createRainDrop, 200);
+
+        function showOverlay() {
+            document.getElementById('overlay').classList.add('active');
+        }
+
+        function hideOverlay() {
+            document.getElementById('overlay').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
