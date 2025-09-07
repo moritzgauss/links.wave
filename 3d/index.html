@@ -2,126 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Three.js Button Carousel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { margin: 0; overflow: hidden; }
-    canvas { display: block; }
-  </style>
+  <title>A piquedeux Web Xperience</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.155.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body>
-<script type="module">
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.164/examples/jsm/controls/OrbitControls.js";
+  <div class="overlay" style="position:absolute;top:20px;left:20px;z-index:10;color:black;">
+    <h1>A piquedeux Web Xperience</h1>
+    <p>
+      A project exploring the intersection of culinary creativity and design aesthetics.<br>
+      Sound Design: Green Room - Moritz Gauss
+    </p>
+  </div>
 
-let scene, camera, renderer, raycaster, mouse, controls;
-let buttons = [];
-
-init();
-animate();
-
-function init() {
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xffffff);
-
-  camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
-  camera.position.set(0, 0, 8);
-
-  renderer = new THREE.WebGLRenderer({antialias: true});
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-
-  raycaster = new THREE.Raycaster();
-  mouse = new THREE.Vector2();
-
-  // OrbitControls = Carousel Steuerung
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableZoom = false;
-  controls.enablePan = false;
-  controls.rotateSpeed = 1.2;
-
-  // Buttons im Kreis
-  const items = [
-    {text: "Home", link: "/"},
-    {text: "About", link: "/about"},
-    {text: "Projects", link: "/projects"},
-    {text: "Newsletter", link: "/newsletter"},
-    {text: "Contact", link: "/contact"}
-  ];
-
-  const radius = 5;
-  const angleStep = (2 * Math.PI) / items.length;
-
-  items.forEach((item, i) => {
-    const angle = i * angleStep;
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius;
-    createButton(item.text, x, y, 0, item.link);
-  });
-
-  window.addEventListener("click", onClick);
-  window.addEventListener("resize", onResize);
-}
-
-function createButton(text, x, y, z, link) {
-  // Canvas -> Texture
-  const canvas = document.createElement("canvas");
-  canvas.width = 256;
-  canvas.height = 64;
-  const ctx = canvas.getContext("2d");
-
-  // weißer Hintergrund mit schwarzer Outline
-  ctx.fillStyle = "white";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.lineWidth = 4;
-  ctx.strokeStyle = "black";
-  ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-  // Text
-  ctx.fillStyle = "black";
-  ctx.font = "28px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(text, canvas.width/2, canvas.height/2);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  const material = new THREE.MeshBasicMaterial({map: texture, transparent: true});
-  const geometry = new THREE.PlaneGeometry(2.5, 0.7);
-  const mesh = new THREE.Mesh(geometry, material);
-
-  mesh.position.set(x, y, z);
-  mesh.lookAt(0, 0, 0); // zur Mitte ausrichten
-  scene.add(mesh);
-
-  buttons.push({mesh, link});
-}
-
-function onClick(event) {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(buttons.map(b => b.mesh));
-
-  if (intersects.length > 0) {
-    const clicked = buttons.find(b => b.mesh === intersects[0].object);
-    if (clicked) {
-      window.location.href = clicked.link;
-    }
-  }
-}
-
-function onResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-}
-</script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
