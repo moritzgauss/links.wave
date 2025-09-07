@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js Navigation Buttons</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'https://unpkg.com/three/examples/jsm/controls/OrbitControls.js';
+
+let scene, camera, renderer, raycaster, mouse;
+let buttons = [];
+
+init();
+animate();
+
+function init() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf5f5f5);
+
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 6);
+
+    renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Licht
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(2, 2, 5);
+    scene.add(light);
+
+    // Raycaster für Klicks
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
+
+    // Buttons mit Label + Link
+    createButton("Home", -2.5, 1, "/");
+    createButton("About", 0, 1, "/about");
+    createButton("Projects", 2.5, 1, "/projects");
+    createButton("Contact", 0, -1, "/contact");
+
+    // Controls (nur zum Testen, kann man weglassen)
+    new OrbitControls(camera, renderer.domElement);
+
+    // Event Listener
+    window.addEventListener('click', onClick);
+    window.addEventListener('resize', onResize);
+}
+
+function createButton(label, x, y, link) {
+    // Button-Körper
+    const geometry = new THREE.BoxGeometry(1.4, 0.5, 0.2);
+    const material = new THREE.MeshStandardMaterial({color: 0x1565c0});
+    const button = new THREE.Mesh(geometry, material);
+    button.position.set(x, y, 0);
+    scene.add(button);
+
+    // Text als Sprite
+    const sprite = makeTextSprite(label);
+    sprite.position.set(x, y, 0.15);
+    scene.add(sprite);
+
+    buttons.push({mesh: button, label: label, link: link});
+}
+
+function makeTextSprite(message) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = "24px Arial";
+    context.fillStyle = "white";
+    context.textAlign = "center";
+    context.fillText(message, canvas.width/2, canvas.height/2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    const material = new THREE.SpriteMaterial({map: texture});
+    const sprite = new THREE.Sprite(material);
+    sprite.scale.set(2, 1, 1);
+    return sprite;
+}
+
+function onClick(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(buttons.map(b => b.mesh));
+
+    if (intersects.length > 0) {
+        const clicked = buttons.find(b => b.mesh === intersects[0].object);
+        if (clicked) {
+            window.location.href = clicked.link;
+        }
+    }
+}
+
+function onResize() {
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+</script>
+</body>
+</html>
