@@ -11,8 +11,8 @@
 </head>
 <body>
 <script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'https://unpkg.com/three/examples/jsm/controls/OrbitControls.js';
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.164/build/three.module.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.164/examples/jsm/controls/OrbitControls.js";
 
 let scene, camera, renderer, raycaster, mouse, controls;
 let buttons = [];
@@ -25,7 +25,7 @@ function init() {
   scene.background = new THREE.Color(0xffffff);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
-  camera.position.set(0, 0, 6);
+  camera.position.set(0, 0, 8);
 
   renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -34,15 +34,13 @@ function init() {
   raycaster = new THREE.Raycaster();
   mouse = new THREE.Vector2();
 
-  // OrbitControls für Carousel-Effekt
+  // OrbitControls = Carousel Steuerung
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableZoom = false;
   controls.enablePan = false;
-  controls.rotateSpeed = 1;
-  controls.autoRotate = false; // ggf. auf true stellen für Auto-Karussell
-  controls.autoRotateSpeed = 2;
+  controls.rotateSpeed = 1.2;
 
-  // Buttons im Kreis anordnen
+  // Buttons im Kreis
   const items = [
     {text: "Home", link: "/"},
     {text: "About", link: "/about"},
@@ -51,7 +49,7 @@ function init() {
     {text: "Contact", link: "/contact"}
   ];
 
-  const radius = 4;
+  const radius = 5;
   const angleStep = (2 * Math.PI) / items.length;
 
   items.forEach((item, i) => {
@@ -61,17 +59,18 @@ function init() {
     createButton(item.text, x, y, 0, item.link);
   });
 
-  window.addEventListener('click', onClick);
-  window.addEventListener('resize', onResize);
+  window.addEventListener("click", onClick);
+  window.addEventListener("resize", onResize);
 }
 
 function createButton(text, x, y, z, link) {
-  const canvas = document.createElement('canvas');
+  // Canvas -> Texture
+  const canvas = document.createElement("canvas");
   canvas.width = 256;
   canvas.height = 64;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
-  // Hintergrund + Outline
+  // weißer Hintergrund mit schwarzer Outline
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.lineWidth = 4;
@@ -87,11 +86,11 @@ function createButton(text, x, y, z, link) {
 
   const texture = new THREE.CanvasTexture(canvas);
   const material = new THREE.MeshBasicMaterial({map: texture, transparent: true});
-  const geometry = new THREE.PlaneGeometry(2, 0.5);
+  const geometry = new THREE.PlaneGeometry(2.5, 0.7);
   const mesh = new THREE.Mesh(geometry, material);
 
   mesh.position.set(x, y, z);
-  mesh.lookAt(0, 0, 0); // Alle Buttons zur Mitte ausrichten
+  mesh.lookAt(0, 0, 0); // zur Mitte ausrichten
   scene.add(mesh);
 
   buttons.push({mesh, link});
